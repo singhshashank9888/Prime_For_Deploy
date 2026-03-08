@@ -55,7 +55,7 @@ const AdminAppointments = () => {
       if (data.success) {
         const patientId = data.appointment.patientId?.patientId;
         setCreatedPatientId(patientId);
-        
+
         toast.success(
           `Appointment confirmed! New Patient ID: ${patientId}`
         );
@@ -63,7 +63,7 @@ const AdminAppointments = () => {
         setNotes("");
         fetchAppointments();
         setActiveTab("confirmed");
-        
+
         // Show success notification for 5 seconds
         setTimeout(() => setCreatedPatientId(null), 5000);
       }
@@ -100,14 +100,14 @@ const AdminAppointments = () => {
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
       <div className="bg-white border-b border-slate-200 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center gap-3">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center gap-3">
           <button
             onClick={() => navigate("/admin/dashboard")}
-            className="text-slate-600 hover:text-slate-900"
+            className="text-slate-600 hover:text-slate-900 transition-colors"
           >
-            <ArrowLeft size={24} />
+            <ArrowLeft size={20} className="sm:w-6 sm:h-6" />
           </button>
-          <h1 className="text-2xl font-bold text-slate-900">Appointment Management</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Appointments</h1>
         </div>
       </div>
 
@@ -134,27 +134,25 @@ const AdminAppointments = () => {
       )}
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-6 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-12">
         {/* Tab Navigation */}
-        <div className="flex gap-4 mb-6">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-8">
           <button
             onClick={() => setActiveTab("pending")}
-            className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all ${
-              activeTab === "pending"
+            className={`flex items-center justify-center sm:justify-start gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold transition-all text-sm sm:text-base ${activeTab === "pending"
                 ? "bg-yellow-600 text-white"
                 : "bg-white text-slate-900 border border-slate-200 hover:border-slate-300"
-            }`}
+              }`}
           >
             <Clock size={20} />
             Pending Appointments ({pendingAppointments.length})
           </button>
           <button
             onClick={() => setActiveTab("confirmed")}
-            className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all ${
-              activeTab === "confirmed"
+            className={`flex items-center justify-center sm:justify-start gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold transition-all text-sm sm:text-base ${activeTab === "confirmed"
                 ? "bg-green-600 text-white"
                 : "bg-white text-slate-900 border border-slate-200 hover:border-slate-300"
-            }`}
+              }`}
           >
             <CheckCircle size={20} />
             Confirmed Appointments ({confirmedAppointments.length})
@@ -174,29 +172,28 @@ const AdminAppointments = () => {
                   </p>
                 ) : (
                   <table className="w-full">
-                    <thead className={`text-white ${
-                      activeTab === "pending" ? "bg-yellow-600" : "bg-green-600"
-                    }`}>
+                    <thead className={`text-white text-xs sm:text-sm ${activeTab === "pending" ? "bg-yellow-600" : "bg-green-600"
+                      }`}>
                       <tr>
-                        <th className="px-6 py-3 text-left">Patient</th>
-                        <th className="px-6 py-3 text-left">Department</th>
-                        <th className="px-6 py-3 text-left">Date</th>
-                        <th className="px-6 py-3 text-left">Patient ID</th>
-                        <th className="px-6 py-3 text-left">Action</th>
+                        <th className="px-4 sm:px-6 py-3 text-left">Patient</th>
+                        <th className="px-4 sm:px-6 py-3 text-left">Department</th>
+                        <th className="px-4 sm:px-6 py-3 text-left">Date</th>
+                        <th className="px-4 sm:px-6 py-3 text-left">ID</th>
+                        <th className="px-4 sm:px-6 py-3 text-left">Action</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="text-xs sm:text-sm">
                       {displayedAppointments.map((apt: any) => (
                         <tr
                           key={apt._id}
                           className="border-b border-slate-200 hover:bg-slate-50"
                         >
-                          <td className="px-6 py-3">{apt.patientName}</td>
-                          <td className="px-6 py-3">{apt.department}</td>
-                          <td className="px-6 py-3">
+                          <td className="px-4 sm:px-6 py-3 whitespace-nowrap">{apt.patientName}</td>
+                          <td className="px-4 sm:px-6 py-3 whitespace-nowrap">{apt.department}</td>
+                          <td className="px-4 sm:px-6 py-3 whitespace-nowrap">
                             {new Date(apt.appointmentDate).toLocaleDateString()}
                           </td>
-                          <td className="px-6 py-3">
+                          <td className="px-4 sm:px-6 py-3">
                             {apt.patientId ? (
                               <span className="font-mono text-blue-600 font-semibold">
                                 {apt.patientId?.patientId || "-"}
@@ -205,7 +202,7 @@ const AdminAppointments = () => {
                               <span className="text-slate-400">-</span>
                             )}
                           </td>
-                          <td className="px-6 py-3">
+                          <td className="px-4 sm:px-6 py-3">
                             {apt.status === "pending" && (
                               <button
                                 onClick={() => setSelectedAppointment(apt)}
@@ -225,7 +222,7 @@ const AdminAppointments = () => {
 
             {/* Confirmation Panel */}
             {selectedAppointment && (
-              <div className="bg-white rounded-xl shadow-lg p-6">
+              <div className="bg-white rounded-xl shadow-lg p-5 sm:p-6 border border-slate-100">
                 <h3 className="text-lg font-bold text-slate-900 mb-4">
                   Confirm Appointment
                 </h3>
@@ -293,20 +290,20 @@ const AdminAppointments = () => {
                     />
                   </div>
                 </div>
-                <div className="flex gap-3">
+                <div className="flex flex-col sm:flex-row gap-3">
                   <button
                     onClick={() => confirmAppointment(selectedAppointment._id)}
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 font-bold transition-all text-sm"
                   >
                     <CheckCircle size={18} />
-                    Confirm & Create Patient
+                    Confirm & Create
                   </button>
                   <button
                     onClick={() => {
                       setSelectedAppointment(null);
                       setNotes("");
                     }}
-                    className="flex-1 px-4 py-2 bg-slate-300 text-slate-900 rounded-lg hover:bg-slate-400"
+                    className="flex-1 px-4 py-3 bg-slate-100 text-slate-600 rounded-xl hover:bg-slate-200 font-bold transition-all text-sm"
                   >
                     Cancel
                   </button>

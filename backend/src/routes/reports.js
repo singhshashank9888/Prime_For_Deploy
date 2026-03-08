@@ -13,7 +13,7 @@ router.get('/', authenticate, authorize(['admin']), async (req, res) => {
       .populate('patientId', 'patientId fullName email')
       .populate('uploadedBy', 'name')
       .sort({ createdAt: -1 });
-    
+
     res.json({ success: true, reports: reports || [] });
   } catch (error) {
     console.error('Error fetching reports:', error);
@@ -21,8 +21,8 @@ router.get('/', authenticate, authorize(['admin']), async (req, res) => {
   }
 });
 
-// Get reports by patient ID (authenticated users) - FIXED
-router.get('/patient/:patientId', authenticate, async (req, res) => {
+// Get reports by patient ID (Public lookup via Patient ID)
+router.get('/patient/:patientId', async (req, res) => {
   try {
     const patientIdParam = req.params.patientId;
     let mongoDbId = patientIdParam;
@@ -33,14 +33,14 @@ router.get('/patient/:patientId', authenticate, async (req, res) => {
     if (patientIdParam.match(/^PT\d+$/i)) {
       console.log('Converting PT format to MongoDB ID');
       const patient = await Patient.findOne({ patientId: patientIdParam.toUpperCase() });
-      
+
       if (!patient) {
-        return res.status(404).json({ 
-          success: false, 
-          message: `Patient with ID ${patientIdParam} not found` 
+        return res.status(404).json({
+          success: false,
+          message: `Patient with ID ${patientIdParam} not found`
         });
       }
-      
+
       mongoDbId = patient._id.toString();
       console.log('Found MongoDB ID:', mongoDbId);
     }
@@ -52,9 +52,9 @@ router.get('/patient/:patientId', authenticate, async (req, res) => {
       .sort({ createdAt: -1 });
 
     if (!reports || reports.length === 0) {
-      return res.status(404).json({ 
-        success: false, 
-        message: 'No reports found for this patient' 
+      return res.status(404).json({
+        success: false,
+        message: 'No reports found for this patient'
       });
     }
 
@@ -72,7 +72,7 @@ router.get('/:id', authenticate, async (req, res) => {
     const report = await Report.findById(req.params.id)
       .populate('patientId', 'patientId fullName email')
       .populate('uploadedBy', 'name');
-    
+
     if (!report) {
       return res.status(404).json({ success: false, message: 'Report not found' });
     }
@@ -87,7 +87,7 @@ router.get('/:id', authenticate, async (req, res) => {
 // Upload report with MULTIPLE images (admin only)
 router.post('/upload', authenticate, authorize(['admin']), upload.array('reportImages', 10), async (req, res) => {
   let uploadedFiles = [];
-  
+
   try {
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ success: false, message: 'No image files provided' });
@@ -96,25 +96,25 @@ router.post('/upload', authenticate, authorize(['admin']), upload.array('reportI
     uploadedFiles = req.files;
     console.log('Files uploaded:', uploadedFiles.length);
 
-    const { 
-      patientId, 
-      patientName, 
+    const {
+      patientId,
+      patientName,
       patientEmail,
       patientPhone,
       patientDateOfBirth,
       patientGender,
       createNewPatient,
-      reportType, 
-      department, 
-      reportDate, 
-      description, 
-      doctorName 
+      reportType,
+      department,
+      reportDate,
+      description,
+      doctorName
     } = req.body;
 
     if (!reportType || !department || !reportDate || !doctorName) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Missing report fields. Required: reportType, department, reportDate, doctorName' 
+      return res.status(400).json({
+        success: false,
+        message: 'Missing report fields. Required: reportType, department, reportDate, doctorName'
       });
     }
 
@@ -139,15 +139,15 @@ router.post('/upload', authenticate, authorize(['admin']), upload.array('reportI
     // CASE 2: Creating new patient
     else if (createNewPatient === 'true') {
       if (!patientName || !patientEmail || !patientPhone || !patientDateOfBirth || !patientGender) {
-        return res.status(400).json({ 
-          success: false, 
-          message: 'Missing patient details' 
+        return res.status(400).json({
+          success: false,
+          message: 'Missing patient details'
         });
       }
 
       try {
-        const existingByEmail = await Patient.findOne({ 
-          email: patientEmail.toLowerCase().trim() 
+        const existingByEmail = await Patient.findOne({
+          email: patientEmail.toLowerCase().trim()
         });
         if (existingByEmail) {
           return res.status(400).json({
@@ -173,17 +173,17 @@ router.post('/upload', authenticate, authorize(['admin']), upload.array('reportI
         finalPatientName = newPatient.fullName;
       } catch (err) {
         console.error('Error creating patient:', err);
-        return res.status(500).json({ 
-          success: false, 
+        return res.status(500).json({
+          success: false,
           message: 'Error creating patient: ' + err.message
         });
       }
     }
 
     if (!finalPatientId) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Please select an existing patient or create a new one' 
+      return res.status(400).json({
+        success: false,
+        message: 'Please select an existing patient or create a new one'
       });
     }
 
@@ -209,7 +209,7 @@ router.post('/upload', authenticate, authorize(['admin']), upload.array('reportI
         await newReport.save();
         await newReport.populate('patientId', 'patientId fullName');
         await newReport.populate('uploadedBy', 'name');
-        
+
         savedReports.push(newReport);
       }
 
@@ -224,16 +224,16 @@ router.post('/upload', authenticate, authorize(['admin']), upload.array('reportI
       });
     } catch (err) {
       console.error('Error saving reports:', err);
-      return res.status(500).json({ 
-        success: false, 
+      return res.status(500).json({
+        success: false,
         message: 'Error saving reports: ' + err.message
       });
     }
 
   } catch (error) {
     console.error('Upload error:', error);
-    return res.status(500).json({ 
-      success: false, 
+    return res.status(500).json({
+      success: false,
       message: 'Server error: ' + error.message
     });
   }

@@ -112,39 +112,36 @@ const AdminMessages = () => {
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
       <div className="bg-white border-b border-slate-200 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center gap-3">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center gap-3">
           <button
             onClick={() => navigate("/admin/dashboard")}
-            className="text-slate-600 hover:text-slate-900"
+            className="text-slate-600 hover:text-slate-900 transition-colors"
           >
-            <ArrowLeft size={24} />
+            <ArrowLeft size={20} className="sm:w-6 sm:h-6" />
           </button>
-          <h1 className="text-2xl font-bold text-slate-900">Message Management</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Messages</h1>
         </div>
       </div>
-
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-6 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-12">
         {/* Tab Navigation */}
-        <div className="flex gap-4 mb-6">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-8">
           <button
             onClick={() => setActiveTab("unread")}
-            className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all ${
-              activeTab === "unread"
+            className={`flex items-center justify-center sm:justify-start gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold transition-all text-sm sm:text-base ${activeTab === "unread"
                 ? "bg-blue-600 text-white"
                 : "bg-white text-slate-900 border border-slate-200 hover:border-slate-300"
-            }`}
+              }`}
           >
             <Mail size={20} />
             Unread Messages ({unreadMessages.length})
           </button>
           <button
             onClick={() => setActiveTab("replied")}
-            className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all ${
-              activeTab === "replied"
+            className={`flex items-center justify-center sm:justify-start gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold transition-all text-sm sm:text-base ${activeTab === "replied"
                 ? "bg-green-600 text-white"
                 : "bg-white text-slate-900 border border-slate-200 hover:border-slate-300"
-            }`}
+              }`}
           >
             <CheckCircle2 size={20} />
             Replied Messages ({repliedMessages.length})
@@ -156,9 +153,8 @@ const AdminMessages = () => {
           {/* Messages List */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-              <div className={`text-white px-6 py-3 font-semibold ${
-                activeTab === "unread" ? "bg-blue-600" : "bg-green-600"
-              }`}>
+              <div className={`text-white px-6 py-3 font-semibold ${activeTab === "unread" ? "bg-blue-600" : "bg-green-600"
+                }`}>
                 {activeTab === "unread" ? "Unread" : "Replied"} Messages ({displayedMessages.length})
               </div>
               <div className="max-h-96 overflow-y-auto">
@@ -171,13 +167,12 @@ const AdminMessages = () => {
                     <button
                       key={msg._id}
                       onClick={() => handleSelectMessage(msg)}
-                      className={`w-full text-left px-4 py-3 border-b border-slate-200 hover:bg-slate-50 transition-all ${
-                        selectedMessage?._id === msg._id 
-                          ? activeTab === "unread" 
-                            ? "bg-blue-50 border-l-4 border-l-blue-500" 
+                      className={`w-full text-left px-4 py-3 border-b border-slate-200 hover:bg-slate-50 transition-all ${selectedMessage?._id === msg._id
+                          ? activeTab === "unread"
+                            ? "bg-blue-50 border-l-4 border-l-blue-500"
                             : "bg-green-50 border-l-4 border-l-green-500"
                           : ""
-                      }`}
+                        }`}
                     >
                       <p className="font-semibold text-sm text-slate-900">
                         {msg.name}
@@ -202,7 +197,7 @@ const AdminMessages = () => {
           {/* Message Details */}
           {selectedMessage && (
             <div className="lg:col-span-2">
-              <div className="bg-white rounded-xl shadow-lg p-6">
+              <div className="bg-white rounded-xl shadow-lg p-5 sm:p-8 border border-slate-100">
                 <h3 className="text-xl font-bold text-slate-900 mb-4">
                   {selectedMessage.subject}
                 </h3>

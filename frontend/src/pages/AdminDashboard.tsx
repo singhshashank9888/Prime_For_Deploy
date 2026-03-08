@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { 
-  LogOut, 
-  Users, 
-  Calendar, 
-  MessageSquare, 
-  FileText, 
+import {
+  LogOut,
+  Users,
+  Calendar,
+  MessageSquare,
+  FileText,
   ChevronRight,
-  LayoutDashboard 
+  LayoutDashboard
 } from "lucide-react";
 import { toast } from "sonner";
 import { API_BASE_URL } from "@/api/config";
@@ -69,27 +69,28 @@ const AdminDashboard = () => {
     <div className="min-h-screen bg-white text-slate-900 font-sans antialiased">
       {/* Premium Header - Matching About Hero style */}
       <header className="bg-white/80 backdrop-blur-md border-b border-slate-100 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-5 flex justify-between items-center">
           <div className="flex items-center gap-4">
-            <div className="h-10 w-10 rounded-xl bg-slate-900 flex items-center justify-center text-white">
-              <LayoutDashboard size={20} />
+            <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl bg-slate-900 flex items-center justify-center text-white">
+              <LayoutDashboard size={16} className="sm:w-5 sm:h-5" />
             </div>
-            <h1 className="text-xl font-bold tracking-tight text-slate-900">Admin Control <span className="font-light text-slate-400">Center</span></h1>
+            <h1 className="text-lg sm:text-xl font-bold tracking-tight text-slate-900">Admin Control <span className="hidden sm:inline font-light text-slate-400">Center</span></h1>
           </div>
-          
+
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white text-sm font-bold rounded-full hover:bg-primary transition-all duration-300 shadow-lg shadow-slate-200"
+            className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 bg-slate-900 text-white text-xs sm:text-sm font-bold rounded-full hover:bg-primary transition-all duration-300 shadow-lg shadow-slate-200"
           >
-            <LogOut size={16} />
-            Sign Out
+            <LogOut size={14} className="sm:w-4 sm:h-4" />
+            <span className="hidden sm:inline">Sign Out</span>
+            <span className="sm:hidden">Exit</span>
           </button>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-6 py-12">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         {/* Breadcrumb - Consistent with About Page */}
-        <div className="inline-block px-4 py-1.5 mb-10 rounded-full bg-slate-50 border border-slate-100">
+        <div className="inline-block px-3 sm:px-4 py-1 sm:py-1.5 mb-6 sm:mb-10 rounded-full bg-slate-50 border border-slate-100">
           <nav className="flex items-center gap-2 text-[10px] font-bold tracking-[0.3em] uppercase text-slate-400">
             <Link to="/" className="hover:text-primary transition-colors">Portal</Link>
             <ChevronRight size={10} />
@@ -98,26 +99,26 @@ const AdminDashboard = () => {
         </div>
 
         {/* Section Title */}
-        <div className="mb-12">
-          <h2 className="text-xs font-bold text-primary tracking-[0.4em] uppercase mb-3">Overview</h2>
-          <h3 className="text-4xl font-bold text-slate-900 tracking-tight">Hospital Metrics</h3>
+        <div className="mb-8 sm:mb-12">
+          <h2 className="text-[10px] sm:text-xs font-bold text-primary tracking-[0.4em] uppercase mb-2 sm:mb-3">Overview</h2>
+          <h3 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight">Hospital Metrics</h3>
         </div>
 
         {/* Stats Grid - Matching About Card Style */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8 mb-12 sm:mb-20">
           {dashboardItems.map((item) => (
             <div
               key={item.path}
               onClick={() => navigate(item.path)}
-              className="group bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-sm transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 cursor-pointer"
+              className="group bg-white p-6 sm:p-10 rounded-3xl sm:rounded-[2.5rem] border border-slate-100 shadow-sm transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 cursor-pointer"
             >
-              <div className="h-14 w-14 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 mb-8 group-hover:bg-slate-900 group-hover:text-white transition-all duration-500 shadow-inner">
-                <item.icon size={26} strokeWidth={1.5} />
+              <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-xl sm:rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 mb-6 sm:mb-8 group-hover:bg-slate-900 group-hover:text-white transition-all duration-500 shadow-inner">
+                <item.icon size={22} className="sm:w-[26px] sm:h-[26px]" strokeWidth={1.5} />
               </div>
-              <h4 className="text-sm font-bold text-slate-400 tracking-[0.2em] uppercase mb-2 group-hover:text-primary transition-colors">
+              <h4 className="text-[10px] sm:text-sm font-bold text-slate-400 tracking-[0.2em] uppercase mb-1 sm:mb-2 group-hover:text-primary transition-colors">
                 {item.title}
               </h4>
-              <p className="text-5xl font-bold text-slate-900 tracking-tighter">{item.count}</p>
+              <p className="text-3xl sm:text-5xl font-bold text-slate-900 tracking-tighter">{item.count}</p>
               <div className="mt-6 flex items-center gap-2 text-xs font-bold text-slate-400 group-hover:text-slate-900 transition-colors">
                 Manage Data <ChevronRight size={12} />
               </div>
@@ -126,14 +127,14 @@ const AdminDashboard = () => {
         </div>
 
         {/* Quick Actions - Clean, Minimalist List */}
-        <section className="bg-slate-50/50 rounded-[3rem] p-12 border border-slate-100">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+        <section className="bg-slate-50/50 rounded-3xl sm:rounded-[3rem] p-6 sm:p-12 border border-slate-100">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
             <div className="max-w-sm">
-              <h2 className="text-2xl font-bold text-slate-900 tracking-tight mb-2">Management Suite</h2>
-              <p className="text-slate-500 font-light">Direct access to core hospital administrative modules and reporting tools.</p>
+              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight mb-2">Management Suite</h2>
+              <p className="text-slate-500 text-sm sm:text-base font-light">Direct access to core hospital administrative modules and reporting tools.</p>
             </div>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-3 sm:gap-4">
               {dashboardItems.map((action) => (
                 <button
                   key={`btn-${action.path}`}

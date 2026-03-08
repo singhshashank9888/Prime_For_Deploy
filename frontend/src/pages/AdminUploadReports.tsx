@@ -13,7 +13,7 @@ const AdminUploadReports = () => {
   const [createNewPatient, setCreateNewPatient] = useState(false);
   const [filteredPatients, setFilteredPatients] = useState([]);
   const [showPatientDropdown, setShowPatientDropdown] = useState(false);
-  
+
   const [formData, setFormData] = useState({
     patientId: "",
     patientName: "",
@@ -112,7 +112,7 @@ const AdminUploadReports = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
-      
+
       const validFiles = files.filter(file => {
         if (!['image/jpeg', 'image/png', 'image/gif'].includes(file.type)) {
           toast.error(`${file.name}: Invalid file type`);
@@ -146,8 +146,8 @@ const AdminUploadReports = () => {
     }
 
     if (createNewPatient) {
-      if (!formData.patientName || !formData.patientEmail || !formData.patientPhone || 
-          !formData.patientDateOfBirth || !formData.patientGender) {
+      if (!formData.patientName || !formData.patientEmail || !formData.patientPhone ||
+        !formData.patientDateOfBirth || !formData.patientGender) {
         toast.error("Please fill all patient details");
         return;
       }
@@ -168,7 +168,7 @@ const AdminUploadReports = () => {
     try {
       const token = localStorage.getItem("authToken");
       const formDataToSend = new FormData();
-      
+
       selectedFiles.forEach(file => {
         formDataToSend.append('reportImages', file);
       });
@@ -254,25 +254,24 @@ const AdminUploadReports = () => {
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
       <div className="bg-white border-b border-slate-200 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center gap-3">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center gap-3">
           <button
             onClick={() => navigate("/admin/dashboard")}
-            className="text-slate-600 hover:text-slate-900"
+            className="text-slate-600 hover:text-slate-900 transition-colors"
           >
-            <ArrowLeft size={24} />
+            <ArrowLeft size={20} className="sm:w-6 sm:h-6" />
           </button>
-          <h1 className="text-2xl font-bold text-slate-900">Upload Medical Reports</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Upload Reports</h1>
         </div>
       </div>
-
       {/* Content */}
-      <div className="max-w-6xl mx-auto px-6 py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Upload Form */}
-          <div className="bg-white rounded-xl shadow-lg p-8">
+          <div className="bg-white rounded-xl shadow-lg p-5 sm:p-8 border border-slate-100">
             <h2 className="text-xl font-bold text-slate-900 mb-6">Upload Report</h2>
             <form onSubmit={handleSubmit} className="space-y-5">
-              
+
               {/* Mode Toggle */}
               <div className="flex gap-4 mb-6">
                 <button
@@ -282,11 +281,10 @@ const AdminUploadReports = () => {
                     setFormData({ ...formData, patientId: "", patientName: "" });
                     setShowPatientDropdown(false);
                   }}
-                  className={`flex-1 py-2 px-4 rounded-lg font-semibold transition-all ${
-                    !createNewPatient
-                      ? "bg-blue-600 text-white"
-                      : "bg-slate-200 text-slate-900 hover:bg-slate-300"
-                  }`}
+                  className={`flex-1 py-2.5 px-4 rounded-xl font-bold transition-all text-sm ${!createNewPatient
+                      ? "bg-blue-600 text-white shadow-md shadow-blue-100"
+                      : "bg-slate-50 text-slate-400 hover:bg-slate-100"
+                    }`}
                 >
                   Existing Patient
                 </button>
@@ -297,11 +295,10 @@ const AdminUploadReports = () => {
                     setFormData({ ...formData, patientId: "", patientName: "" });
                     setShowPatientDropdown(false);
                   }}
-                  className={`flex-1 py-2 px-4 rounded-lg font-semibold transition-all ${
-                    createNewPatient
-                      ? "bg-blue-600 text-white"
-                      : "bg-slate-200 text-slate-900 hover:bg-slate-300"
-                  }`}
+                  className={`flex-1 py-2.5 px-4 rounded-xl font-bold transition-all text-sm ${createNewPatient
+                      ? "bg-blue-600 text-white shadow-md shadow-blue-100"
+                      : "bg-slate-50 text-slate-400 hover:bg-slate-100"
+                    }`}
                 >
                   <Plus size={16} className="inline mr-2" />
                   New Patient
@@ -323,7 +320,7 @@ const AdminUploadReports = () => {
                       className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       autoComplete="off"
                     />
-                    
+
                     {/* Patient Dropdown */}
                     {showPatientDropdown && filteredPatients.length > 0 && (
                       <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-slate-300 rounded-lg shadow-lg z-10 max-h-48 overflow-y-auto">
@@ -354,7 +351,7 @@ const AdminUploadReports = () => {
               {createNewPatient && (
                 <div className="space-y-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
                   <h3 className="font-semibold text-slate-900">Patient Details</h3>
-                  
+
                   <div>
                     <label className="block text-sm font-semibold text-slate-900 mb-2">Name *</label>
                     <input
@@ -542,7 +539,7 @@ const AdminUploadReports = () => {
           </div>
 
           {/* Reports List */}
-          <div className="bg-white rounded-xl shadow-lg p-8">
+          <div className="bg-white rounded-xl shadow-lg p-5 sm:p-8 border border-slate-100">
             <h2 className="text-xl font-bold text-slate-900 mb-6">Recent Reports ({reports.length})</h2>
             <div className="max-h-[600px] overflow-y-auto space-y-3">
               {reports.length === 0 ? (

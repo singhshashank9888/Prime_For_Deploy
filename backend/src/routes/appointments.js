@@ -12,7 +12,7 @@ router.get('/', authenticate, authorize(['admin']), async (req, res) => {
     const appointments = await Appointment.find()
       .populate('patientId')
       .populate('confirmedBy', 'name');
-    
+
     res.json({ success: true, appointments });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -24,7 +24,7 @@ router.get('/user/me', authenticate, async (req, res) => {
   try {
     const appointments = await Appointment.find({ patientId: req.userId })
       .populate('patientId');
-    
+
     res.json({ success: true, appointments });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -37,7 +37,7 @@ router.get('/:id', authenticate, async (req, res) => {
     const appointment = await Appointment.findById(req.params.id)
       .populate('patientId')
       .populate('confirmedBy', 'name');
-    
+
     if (!appointment) {
       return res.status(404).json({ success: false, message: 'Appointment not found' });
     }
@@ -54,9 +54,9 @@ router.post('/', async (req, res) => {
     const { patientName, email, phone, department, appointmentDate, timeSlot, reason } = req.body;
 
     if (!patientName || !email || !phone || !department || !appointmentDate || !timeSlot) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Please provide all required fields' 
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide all required fields'
       });
     }
 
@@ -89,7 +89,11 @@ router.post('/', async (req, res) => {
       <p>Thank you for choosing Prime Hospital!</p>
     `;
 
-    await sendEmail(email, 'Appointment Request Received', emailContent);
+    try {
+      await sendEmail(email, 'Appointment Request Received', emailContent);
+    } catch (emailError) {
+      console.error(`⚠️ Email notification skipped: ${emailError.message}`);
+    }
 
     res.status(201).json({
       success: true,
@@ -105,10 +109,10 @@ router.post('/', async (req, res) => {
 router.put('/:id/confirm', authenticate, authorize(['admin']), async (req, res) => {
   try {
     const { notes } = req.body;
-    
+
     // First, fetch the appointment to get all details
     const appointment = await Appointment.findById(req.params.id);
-    
+
     if (!appointment) {
       return res.status(404).json({ success: false, message: 'Appointment not found' });
     }
@@ -120,7 +124,7 @@ router.put('/:id/confirm', authenticate, authorize(['admin']), async (req, res) 
       try {
         // Check if patient with this email already exists
         let patient = await Patient.findOne({ email: appointment.email });
-        
+
         if (!patient) {
           // ✅ FIXED: Include ALL REQUIRED fields for patient creation
           patient = new Patient({
@@ -135,17 +139,17 @@ router.put('/:id/confirm', authenticate, authorize(['admin']), async (req, res) 
             userId: req.userId, // ✅ FIX: Use admin's ID (required field)
             createdBy: req.userId, // ✅ FIX: Admin who created the patient
           });
-          
+
           await patient.save();
           console.log('✅ New patient created with ID:', patient.patientId);
         }
-        
+
         patientId = patient._id;
       } catch (patientError) {
         console.error('❌ Error creating patient:', patientError);
-        return res.status(400).json({ 
-          success: false, 
-          message: `Failed to create patient: ${patientError.message}` 
+        return res.status(400).json({
+          success: false,
+          message: `Failed to create patient: ${patientError.message}`
         });
       }
     }
@@ -181,12 +185,16 @@ router.put('/:id/confirm', authenticate, authorize(['admin']), async (req, res) 
       <p>Thank you for choosing Prime Hospital!</p>
     `;
 
-    await sendEmail(appointment.email, 'Appointment Confirmed', emailContent);
+    try {
+      await sendEmail(appointment.email, 'Appointment Confirmed', emailContent);
+    } catch (emailError) {
+      console.error(`⚠️ Email confirmation skipped: ${emailError.message}`);
+    }
 
-    res.json({ 
-      success: true, 
-      message: `Appointment confirmed! Patient ID: ${patientIDStr}`, 
-      appointment: updatedAppointment 
+    res.json({
+      success: true,
+      message: `Appointment confirmed! Patient ID: ${patientIDStr}`,
+      appointment: updatedAppointment
     });
   } catch (error) {
     console.error('❌ Error confirming appointment:', error);
@@ -198,7 +206,7 @@ router.put('/:id/confirm', authenticate, authorize(['admin']), async (req, res) 
 router.put('/:id/cancel', authenticate, async (req, res) => {
   try {
     const appointment = await Appointment.findById(req.params.id);
-    
+
     if (!appointment) {
       return res.status(404).json({ success: false, message: 'Appointment not found' });
     }

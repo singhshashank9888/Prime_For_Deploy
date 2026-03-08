@@ -64,10 +64,10 @@ const doctors = [
 const Doctors = () => {
   return (
     <div className="bg-white min-h-screen font-sans text-slate-900">
-      
+
       {/* Hero Section */}
       <section className="relative py-32 flex items-center justify-center text-center overflow-hidden bg-slate-900">
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: "url('https://i.imgur.com/Qn0pz2o.jpg')" }}
         />
@@ -94,14 +94,14 @@ const Doctors = () => {
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
             {doctors.map((doc) => (
-              <div 
-                key={doc.name} 
+              <div
+                key={doc.name}
                 className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow transform hover:-translate-y-1 duration-300 p-6 flex flex-col items-center text-center"
               >
                 <div className="relative w-40 h-40 mb-4">
-                  <img 
-                    src={doc.image} 
-                    alt={doc.name} 
+                  <img
+                    src={doc.image}
+                    alt={doc.name}
                     className="w-full h-full object-cover rounded-full shadow-sm"
                   />
                   {doc.available && (
@@ -119,9 +119,12 @@ const Doctors = () => {
                     <Award size={12} className="opacity-70" /> {doc.experience} Experience
                   </div>
                 </div>
-                <button className="bg-slate-900 text-white px-6 py-2 rounded-full font-bold hover:bg-slate-800 transition-colors flex items-center gap-2">
+                <Link
+                  to="/appointments"
+                  className="bg-slate-900 text-white px-6 py-2 rounded-full font-bold hover:bg-slate-800 transition-colors flex items-center gap-2"
+                >
                   <Calendar size={16} /> Book
-                </button>
+                </Link>
               </div>
             ))}
           </div>
@@ -135,9 +138,12 @@ const Doctors = () => {
           <p className="text-slate-500 mb-8 font-light leading-relaxed">
             Our specialists are available for scheduled appointments and emergency trauma care.
           </p>
-          <button className="bg-slate-900 text-white px-10 py-4 rounded-full font-bold hover:bg-slate-800 transition-all shadow-xl active:scale-95 flex items-center gap-2 mx-auto">
+          <Link
+            to="/appointments"
+            className="bg-slate-900 text-white px-10 py-4 rounded-full font-bold hover:bg-slate-800 transition-all shadow-xl active:scale-95 flex items-center gap-2 mx-auto w-fit"
+          >
             <Calendar size={18} /> Schedule Visit
-          </button>
+          </Link>
         </div>
       </section>
     </div>

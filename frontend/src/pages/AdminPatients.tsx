@@ -12,7 +12,7 @@ const AdminPatients = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showAddPatientModal, setShowAddPatientModal] = useState(false);
   const [formLoading, setFormLoading] = useState(false);
-  
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -152,38 +152,38 @@ const AdminPatients = () => {
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
       <div className="bg-white border-b border-slate-200 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex items-center gap-3">
             <button
               onClick={() => navigate("/admin/dashboard")}
-              className="text-slate-600 hover:text-slate-900"
+              className="text-slate-600 hover:text-slate-900 transition-colors"
             >
-              <ArrowLeft size={24} />
+              <ArrowLeft size={20} className="sm:w-6 sm:h-6" />
             </button>
-            <h1 className="text-2xl font-bold text-slate-900">Patient Management</h1>
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900">Patients</h1>
           </div>
           <button
             onClick={() => setShowAddPatientModal(true)}
-            className="flex items-center gap-2 bg-slate-900 text-white px-4 py-2 rounded-lg hover:bg-slate-800 transition-all"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 bg-slate-900 text-white px-4 py-2 sm:py-2.5 rounded-lg hover:bg-slate-800 transition-all shadow-sm text-sm"
           >
-            <Plus size={20} />
+            <Plus size={18} />
             Add New Patient
           </button>
         </div>
       </div>
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-6 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-12">
         {/* Search Bar */}
         <div className="mb-6 relative">
           <div className="relative">
             <Search className="absolute left-3 top-3 text-slate-400" size={20} />
             <input
               type="text"
-              placeholder="Search by patient name, ID, or email..."
+              placeholder="Search patients..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900"
+              className="w-full pl-10 pr-4 py-2.5 sm:py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 text-sm"
             />
             {searchTerm && (
               <button
@@ -223,30 +223,30 @@ const AdminPatients = () => {
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-slate-900 text-white">
+                  <thead className="bg-slate-900 text-white text-xs sm:text-sm">
                     <tr>
-                      <th className="px-6 py-3 text-left font-semibold">Patient ID</th>
-                      <th className="px-6 py-3 text-left font-semibold">Name</th>
-                      <th className="px-6 py-3 text-left font-semibold">Email</th>
-                      <th className="px-6 py-3 text-left font-semibold">Phone</th>
-                      <th className="px-6 py-3 text-left font-semibold">Blood Group</th>
-                      <th className="px-6 py-3 text-left font-semibold">Actions</th>
+                      <th className="px-4 sm:px-6 py-3 text-left font-semibold">ID</th>
+                      <th className="px-4 sm:px-6 py-3 text-left font-semibold">Name</th>
+                      <th className="px-4 sm:px-6 py-3 text-left font-semibold">Email</th>
+                      <th className="px-4 sm:px-6 py-3 text-left font-semibold">Phone</th>
+                      <th className="px-4 sm:px-6 py-3 text-left font-semibold whitespace-nowrap">Blood Group</th>
+                      <th className="px-4 sm:px-6 py-3 text-left font-semibold">Actions</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody className="text-xs sm:text-sm">
                     {filteredPatients.map((patient: any) => (
                       <tr
                         key={patient._id}
                         className="border-b border-slate-200 hover:bg-slate-50 transition-colors"
                       >
-                        <td className="px-6 py-3 font-semibold text-blue-600">
+                        <td className="px-4 sm:px-6 py-3 font-semibold text-blue-600">
                           {patient.patientId}
                         </td>
-                        <td className="px-6 py-3">{patient.fullName}</td>
-                        <td className="px-6 py-3 text-slate-600">{patient.email}</td>
-                        <td className="px-6 py-3">{patient.phone}</td>
-                        <td className="px-6 py-3">{patient.bloodGroup || "-"}</td>
-                        <td className="px-6 py-3">
+                        <td className="px-4 sm:px-6 py-3 whitespace-nowrap">{patient.fullName}</td>
+                        <td className="px-4 sm:px-6 py-3 text-slate-600">{patient.email}</td>
+                        <td className="px-4 sm:px-6 py-3 whitespace-nowrap">{patient.phone}</td>
+                        <td className="px-4 sm:px-6 py-3">{patient.bloodGroup || "-"}</td>
+                        <td className="px-4 sm:px-6 py-3">
                           <div className="flex items-center gap-3">
                             <button
                               onClick={() => navigate(`/admin/patients/${patient._id}`)}

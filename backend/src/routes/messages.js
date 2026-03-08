@@ -23,7 +23,7 @@ router.get('/:id', authenticate, authorize(['admin']), async (req, res) => {
       { status: 'read' },
       { new: true }
     ).populate('repliedBy', 'name');
-    
+
     if (!message) {
       return res.status(404).json({ success: false, message: 'Message not found' });
     }
@@ -40,9 +40,9 @@ router.post('/', async (req, res) => {
     const { name, email, phone, subject, message } = req.body;
 
     if (!name || !email || !subject || !message) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Please provide all required fields' 
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide all required fields'
       });
     }
 
@@ -67,7 +67,11 @@ router.post('/', async (req, res) => {
       <p>Best regards,<br>Prime Hospital Team</p>
     `;
 
-    await sendEmail(email, 'Message Received', senderEmail);
+    try {
+      await sendEmail(email, 'Message Received', senderEmail);
+    } catch (emailError) {
+      console.error(`⚠️ Sender notification skipped: ${emailError.message}`);
+    }
 
     // Send admin notification
     const adminEmail = `
@@ -80,7 +84,11 @@ router.post('/', async (req, res) => {
       <p>${message}</p>
     `;
 
-    await sendEmail(process.env.EMAIL_USER, `New Message: ${subject}`, adminEmail);
+    try {
+      await sendEmail(process.env.EMAIL_USER, `New Message: ${subject}`, adminEmail);
+    } catch (emailError) {
+      console.error(`⚠️ Admin notification skipped: ${emailError.message}`);
+    }
 
     res.status(201).json({
       success: true,
@@ -117,7 +125,11 @@ router.put('/:id/reply', authenticate, authorize(['admin']), async (req, res) =>
       <p>Best regards,<br>Prime Hospital Team</p>
     `;
 
-    await sendEmail(message.email, `Re: ${message.subject}`, replyEmail);
+    try {
+      await sendEmail(message.email, `Re: ${message.subject}`, replyEmail);
+    } catch (emailError) {
+      console.error(`⚠️ Reply notification skipped: ${emailError.message}`);
+    }
 
     res.json({ success: true, message: 'Reply sent successfully' });
   } catch (error) {
