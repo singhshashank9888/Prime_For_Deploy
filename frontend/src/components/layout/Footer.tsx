@@ -1,16 +1,38 @@
 import { Link } from "react-router-dom";
 import { MapPin, Phone, Mail, Clock, Facebook, ArrowUpRight } from "lucide-react";
+import React from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const footerRef = React.useRef<HTMLElement>(null);
+
+  useGSAP(() => {
+    gsap.from(".footer-column", {
+      scrollTrigger: {
+        trigger: footerRef.current,
+        start: "top 90%",
+        once: true,
+      },
+      opacity: 0,
+      y: 30,
+      stagger: 0.1,
+      duration: 1,
+      ease: "power3.out"
+    });
+  }, { scope: footerRef });
 
   return (
-    <footer className="bg-slate-950 text-white pt-24 pb-12">
+    <footer ref={footerRef} className="bg-slate-950 text-white pt-24 pb-12 overflow-hidden">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
 
           {/* Brand & Mission */}
-          <div className="space-y-6">
+          <div className="footer-column space-y-6">
             <Link to="/" className="flex items-center gap-3">
               <span className="font-serif text-2xl tracking-tight">
                 <span className="font-light">Prime</span> <span className="font-bold">Hospital</span>
@@ -22,13 +44,13 @@ const Footer = () => {
           </div>
 
           {/* Navigation */}
-          <div>
+          <div className="footer-column">
             <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500 mb-8">Navigation</h4>
             <ul className="space-y-4">
               {["About", "Departments", "Doctors", "Appointments", "Gallery"].map((item) => (
                 <li key={item}>
-                  <Link 
-                    to={`/${item.toLowerCase()}`} 
+                  <Link
+                    to={`/${item.toLowerCase()}`}
                     className="group flex items-center text-sm font-light text-slate-300 hover:text-white transition-colors"
                   >
                     {item}
@@ -40,7 +62,7 @@ const Footer = () => {
           </div>
 
           {/* Contact Details */}
-          <div>
+          <div className="footer-column">
             <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500 mb-8">Contact</h4>
             <ul className="space-y-5 text-sm font-light text-slate-300">
               <li className="flex items-start gap-3">
@@ -63,7 +85,7 @@ const Footer = () => {
           </div>
 
           {/* Operations */}
-          <div>
+          <div className="footer-column">
             <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500 mb-8">Operations</h4>
             <ul className="space-y-4 text-sm font-light text-slate-300">
               <li className="flex items-center gap-3">

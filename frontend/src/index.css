@@ -89,11 +89,18 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-body);
   }
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-display);
   }
 }
@@ -102,6 +109,40 @@
   .text-balance {
     text-wrap: balance;
   }
+}
+
+/* --- Global Layout Enhancements --- */
+html {
+  scroll-behavior: smooth;
+}
+
+.stat-card,
+.dept-card,
+.value-card,
+.doctor-card,
+.story-img,
+.story-content,
+.footer-column {
+  will-change: transform, opacity;
+}
+
+/* Custom Scrollbar for Premium Feel */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 5px;
+  border: 3px solid hsl(var(--background));
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.6);
 }
 
 /* --- Slick Slider Premium Customization --- */
@@ -144,10 +185,12 @@
   .custom-dots {
     bottom: 30px !important;
   }
+
   .custom-dots li {
     width: 8px !important;
     height: 8px !important;
   }
+
   .custom-dots li button:before {
     width: 8px !important;
     height: 8px !important;

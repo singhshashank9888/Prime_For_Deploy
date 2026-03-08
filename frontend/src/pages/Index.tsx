@@ -16,6 +16,12 @@ import {
   ChevronRight,
 } from "lucide-react";
 import Slider from "react-slick";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+// Register ScrollTrigger
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 // Hero images
 const heroImages = [
@@ -85,8 +91,68 @@ const sliderSettings = {
 };
 
 const Index = () => {
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    // --- 1. Hero Animations ---
+    const tl = gsap.timeline({ defaults: { ease: "power3.out", duration: 1.2 } });
+
+    tl.fromTo(".hero-badge", { opacity: 0, y: 30 }, { opacity: 1, y: 0, delay: 0.5 })
+      .fromTo(".hero-title span", { opacity: 0, y: 50 }, {
+        opacity: 1,
+        y: 0,
+        stagger: 0.2,
+      }, "-=0.8")
+      .fromTo(".hero-desc", { opacity: 0, y: 30 }, { opacity: 1, y: 0 }, "-=1")
+      .fromTo(".hero-btns", { opacity: 0, y: 30 }, { opacity: 1, y: 0 }, "-=1");
+
+    // --- 2. Stats Animations ---
+    gsap.fromTo(".stat-card", { opacity: 0, y: 50, scale: 0.9 }, {
+      scrollTrigger: {
+        trigger: ".stats-section",
+        start: "top 90%",
+        once: true,
+      },
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      stagger: 0.1,
+      duration: 0.8,
+      ease: "power2.out",
+      onComplete: () => gsap.set(".stat-card", { clearProps: "all" })
+    });
+
+    // --- 3. Departments Section Animation ---
+    gsap.fromTo(".dept-card", { opacity: 0, y: 60 }, {
+      scrollTrigger: {
+        trigger: ".dept-section",
+        start: "top 85%",
+        once: true,
+      },
+      opacity: 1,
+      y: 0,
+      stagger: 0.1,
+      duration: 0.8,
+      ease: "power3.out",
+      onComplete: () => gsap.set(".dept-card", { clearProps: "all" })
+    });
+
+    // --- 4. Doctors Callout Parallax ---
+    gsap.to(".doctor-bg", {
+      scrollTrigger: {
+        trigger: ".doctor-section",
+        start: "top bottom",
+        end: "bottom top",
+        scrub: true,
+      },
+      y: "15%",
+      ease: "none"
+    });
+
+  }, { scope: containerRef });
+
   return (
-    <div className="bg-white font-sans antialiased text-slate-900">
+    <div ref={containerRef} className="bg-white font-sans antialiased text-slate-900 overflow-x-hidden">
 
       {/* --- 1. HERO SLIDER SECTION --- */}
       <section className="relative h-[95vh] min-h-[700px] flex items-center overflow-hidden bg-slate-900">
@@ -107,24 +173,24 @@ const Index = () => {
 
         <div className="relative z-10 container mx-auto px-6 h-full flex items-center pointer-events-none">
           <div className="max-w-4xl text-center md:text-left w-full pointer-events-auto">
-            <div className="inline-block px-4 py-1.5 mb-8 rounded-full bg-white/10 backdrop-blur-md border border-white/20">
+            <div className="hero-badge inline-block px-4 py-1.5 mb-8 rounded-full bg-white/10 backdrop-blur-md border border-white/20">
               <p className="text-white text-[10px] font-bold tracking-[0.3em] uppercase">
                 Premium Multi-Specialty Institution
               </p>
             </div>
 
             {/* Title: No Italics, Bold/Light Mix */}
-            <h1 className="text-6xl md:text-8xl font-serif text-white mb-8 tracking-tight drop-shadow-lg leading-[1.1]">
-              <span className="font-light">In the</span> <span className="font-bold">Heart</span><br />
-              <span className="font-light">of</span> <span className="font-bold">Biratnagar</span>
+            <h1 className="hero-title text-6xl md:text-8xl font-serif text-white mb-8 tracking-tight drop-shadow-lg leading-[1.1]">
+              <span className="font-light block sm:inline">In the</span> <span className="font-bold">Heart</span><br />
+              <span className="font-light block sm:inline">of</span> <span className="font-bold">Biratnagar</span>
             </h1>
 
-            <p className="text-white/90 text-lg md:text-xl mb-10 max-w-xl leading-relaxed font-medium drop-shadow-md backdrop-blur-[2px] py-2">
+            <p className="hero-desc text-white/90 text-lg md:text-xl mb-10 max-w-xl leading-relaxed font-medium drop-shadow-md backdrop-blur-[2px] py-2">
               Prime Hospital integrates world-class clinical expertise with
               state-of-the-art diagnostic technology for our community.
             </p>
 
-            <div className="flex flex-wrap gap-5 justify-center md:justify-start">
+            <div className="hero-btns flex flex-wrap gap-5 justify-center md:justify-start">
               <Link to="/appointments">
                 <Button size="lg" className="bg-white text-slate-900 hover:bg-slate-200 font-bold px-10 h-16 rounded-full shadow-2xl transition-all active:scale-95">
                   Book Appointment
@@ -141,11 +207,11 @@ const Index = () => {
       </section>
 
       {/* --- 2. STATS SECTION --- */}
-      <section className="relative -mt-16 z-20 container mx-auto px-6">
+      <section className="stats-section relative -mt-16 z-20 container mx-auto px-6">
         <div className="bg-slate-900 rounded-[3rem] p-12 text-white shadow-2xl border border-white/5">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
             {stats.map((s) => (
-              <div key={s.label} className="group flex flex-col items-center gap-3">
+              <div key={s.label} className="stat-card group flex flex-col items-center gap-3">
                 <div className="h-12 w-12 rounded-2xl bg-white/10 flex items-center justify-center mb-2 group-hover:bg-white group-hover:text-slate-900 transition-all duration-500">
                   <s.icon size={24} />
                 </div>
@@ -158,7 +224,7 @@ const Index = () => {
       </section>
 
       {/* --- 3. DEPARTMENTS PREVIEW --- */}
-      <section className="py-32 bg-white">
+      <section className="dept-section py-32 bg-white">
         <div className="container mx-auto px-6">
           <div className="text-center mb-20">
             <h2 className="text-[10px] font-bold text-slate-400 tracking-[0.4em] uppercase mb-4">Specialties</h2>
@@ -172,7 +238,7 @@ const Index = () => {
               <Link
                 key={d.name}
                 to={`/departments/${d.name.toLowerCase().replace(/\s+/g, "-")}`} // Converts name to slug
-                className="group p-10 rounded-[2.5rem] border border-slate-100 bg-white hover:bg-slate-50 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 block"
+                className="dept-card group p-10 rounded-[2.5rem] border border-slate-100 bg-white hover:bg-slate-50 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 block"
               >
                 <div className="h-14 w-14 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 mb-8 group-hover:bg-slate-900 group-hover:text-white transition-all duration-500 shadow-inner">
                   <d.icon size={26} strokeWidth={1.5} />
@@ -190,7 +256,7 @@ const Index = () => {
             {/* View All Departments Card */}
             <Link
               to="/departments"
-              className="group p-10 rounded-[2.5rem] border border-slate-100 bg-white hover:bg-slate-50 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 flex flex-col items-center justify-center text-center"
+              className="dept-card group p-10 rounded-[2.5rem] border border-slate-100 bg-white hover:bg-slate-50 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 flex flex-col items-center justify-center text-center"
             >
               <div className="h-14 w-14 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 mb-8 group-hover:bg-slate-900 group-hover:text-white transition-all duration-500 shadow-inner">
                 <ArrowRight size={26} />
@@ -205,11 +271,19 @@ const Index = () => {
       </section>
 
       {/* --- 4. DOCTORS CALLOUT --- */}
-      <section className="py-24 container mx-auto px-6">
+      <section className="doctor-section py-24 container mx-auto px-6">
         <div
           className="relative rounded-[3rem] overflow-hidden min-h-[500px] flex items-center group shadow-2xl"
-          style={{ backgroundImage: "url('https://i.imgur.com/Qn0pz2o.jpg')", backgroundPosition: "center 25%", backgroundSize: "cover" }}
         >
+          <div
+            className="doctor-bg absolute inset-0 bg-cover"
+            style={{
+              backgroundImage: "url('https://i.imgur.com/Qn0pz2o.jpg')",
+              backgroundPosition: "center 25%",
+              height: "120%",
+              top: "-10%"
+            }}
+          />
           <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px] transition-all duration-700" />
 
           <div className="relative z-10 w-full p-12 md:p-24 text-center md:text-left text-white">

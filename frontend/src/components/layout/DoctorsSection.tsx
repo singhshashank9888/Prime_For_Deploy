@@ -1,4 +1,10 @@
 import { Badge } from "@/components/ui/badge";
+import React from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const doctors = [
   {
@@ -60,78 +66,108 @@ const doctors = [
   },
 ];
 
-const DoctorsSection = () => (
-  <section className="py-24 bg-background">
-    <div className="container mx-auto px-4">
-      
-      {/* Header */}
-      <div className="text-center mb-16 max-w-3xl mx-auto">
-        <p className="text-primary font-semibold text-sm tracking-widest uppercase mb-2">
-          Meet Our Team
-        </p>
+const DoctorsSection = () => {
+  const sectionRef = React.useRef<HTMLElement>(null);
 
-        <h2 className="font-display text-4xl font-bold text-foreground">
-          Our Doctors
-        </h2>
+  useGSAP(() => {
+    gsap.from(".section-header", {
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top 90%",
+        once: true,
+      },
+      opacity: 0,
+      y: 30,
+      duration: 0.8,
+      ease: "power2.out"
+    });
 
-        <p className="text-muted-foreground mt-4">
-          Experienced, qualified, and compassionate — our medical team is
-          dedicated to your well-being.
-        </p>
-      </div>
+    gsap.from(".doctor-card", {
+      scrollTrigger: {
+        trigger: ".doctor-grid",
+        start: "top 85%",
+        once: true,
+      },
+      opacity: 0,
+      y: 40,
+      stagger: 0.08,
+      duration: 1,
+      ease: "power3.out"
+    });
+  }, { scope: sectionRef });
 
-      {/* Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        {doctors.map((doc) => (
-          <div
-            key={doc.name}
-            className="bg-card border border-border rounded-[var(--radius)] p-8 text-center shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
-          >
-            {/* Image */}
-            <div className="flex justify-center mb-5">
-              <img
-                src={doc.image}
-                alt={doc.name}
-                loading="lazy"
-                className="w-24 h-24 object-cover rounded-full border-4 border-primary"
-              />
-            </div>
+  return (
+    <section ref={sectionRef} className="py-24 bg-background">
+      <div className="container mx-auto px-4">
 
-            {/* Name */}
-            <h3 className="font-display text-lg font-semibold text-card-foreground">
-              {doc.name}
-            </h3>
+        {/* Header */}
+        <div className="section-header text-center mb-16 max-w-3xl mx-auto">
+          <p className="text-primary font-semibold text-sm tracking-widest uppercase mb-2">
+            Meet Our Team
+          </p>
 
-            {/* Specialty */}
-            <Badge className="mt-3 bg-secondary text-secondary-foreground">
-              {doc.specialty}
-            </Badge>
+          <h2 className="font-display text-4xl font-bold text-foreground">
+            Our Doctors
+          </h2>
 
-            {/* Qualification */}
-            <p className="text-sm text-muted-foreground mt-4">
-              {doc.qualification}
-            </p>
+          <p className="text-muted-foreground mt-4">
+            Experienced, qualified, and compassionate — our medical team is
+            dedicated to your well-being.
+          </p>
+        </div>
 
-            {/* Experience */}
-            <p className="text-sm text-muted-foreground">
-              {doc.experience} experience
-            </p>
+        {/* Grid */}
+        <div className="doctor-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {doctors.map((doc) => (
+            <div
+              key={doc.name}
+              className="doctor-card bg-card border border-border rounded-[var(--radius)] p-8 text-center shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+            >
+              {/* Image */}
+              <div className="flex justify-center mb-5">
+                <img
+                  src={doc.image}
+                  alt={doc.name}
+                  loading="lazy"
+                  className="w-24 h-24 object-cover rounded-full border-4 border-primary"
+                />
+              </div>
 
-            {/* Availability */}
-            <p
-              className={`text-sm font-medium mt-4 ${
-                doc.available
+              {/* Name */}
+              <h3 className="font-display text-lg font-semibold text-card-foreground">
+                {doc.name}
+              </h3>
+
+              {/* Specialty */}
+              <Badge className="mt-3 bg-secondary text-secondary-foreground">
+                {doc.specialty}
+              </Badge>
+
+              {/* Qualification */}
+              <p className="text-sm text-muted-foreground mt-4">
+                {doc.qualification}
+              </p>
+
+              {/* Experience */}
+              <p className="text-sm text-muted-foreground">
+                {doc.experience} experience
+              </p>
+
+              {/* Availability */}
+              <p
+                className={`text-sm font-medium mt-4 ${doc.available
                   ? "text-primary"
                   : "text-destructive"
-              }`}
-            >
-              {doc.available ? "Available Today" : "Not Available"}
-            </p>
-          </div>
-        ))}
+                  }`}
+              >
+                {doc.available ? "Available Today" : "Not Available"}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 export default DoctorsSection;
