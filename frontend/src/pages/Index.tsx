@@ -48,30 +48,7 @@ const stats = [
   { value: "1000+", label: "Patients Served", icon: Heart },
 ];
 
-// Restored & Modernized Custom Arrows
-const CustomPrevArrow = (props: any) => {
-  const { onClick } = props;
-  return (
-    <button
-      onClick={onClick}
-      className="absolute left-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 hidden lg:flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white hover:text-slate-900 transition-all active:scale-90"
-    >
-      <ChevronLeft size={24} />
-    </button>
-  );
-};
-
-const CustomNextArrow = (props: any) => {
-  const { onClick } = props;
-  return (
-    <button
-      onClick={onClick}
-      className="absolute right-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 hidden lg:flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white hover:text-slate-900 transition-all active:scale-90"
-    >
-      <ChevronRight size={24} />
-    </button>
-  );
-};
+// Arrows are removed as per user request to use dots on desktop and swipe on mobile
 
 const sliderSettings = {
   dots: true,
@@ -81,17 +58,26 @@ const sliderSettings = {
   autoplaySpeed: 5000,
   slidesToShow: 1,
   slidesToScroll: 1,
-  arrows: true,
-  prevArrow: <CustomPrevArrow />,
-  nextArrow: <CustomNextArrow />,
+  arrows: false, // Explicitly removed arrows
   fade: true,
   swipe: true,
   touchMove: true,
   dotsClass: "slick-dots custom-dots",
+  responsive: [
+    {
+      breakpoint: 1024,
+      settings: {
+        dots: false, // Remove dots on mobile as requested
+        swipe: true,
+        arrows: false // Double ensure arrows are off
+      }
+    }
+  ]
 };
 
 const Index = () => {
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const sliderRef = React.useRef<Slider>(null);
 
   useGSAP(() => {
     // --- 1. Hero Animations ---
@@ -157,7 +143,7 @@ const Index = () => {
       {/* --- 1. HERO SLIDER SECTION --- */}
       <section className="relative h-[95vh] min-h-[700px] flex items-center overflow-hidden bg-slate-900">
         <div className="absolute inset-0 w-full h-full z-0">
-          <Slider {...sliderSettings} className="h-full w-full">
+          <Slider ref={sliderRef} {...sliderSettings} className="h-full w-full">
             {heroImages.map((img, idx) => (
               <div key={idx} className="relative h-[95vh] min-h-[700px]">
                 <img
@@ -169,6 +155,20 @@ const Index = () => {
               </div>
             ))}
           </Slider>
+
+          {/* Navigation Click Overlays (Desktop Only) */}
+          <div className="hidden lg:block absolute inset-0 z-20 pointer-events-none">
+            <div
+              className="absolute left-0 top-0 w-1/4 h-full cursor-w-resize pointer-events-auto"
+              onClick={() => sliderRef.current?.slickPrev()}
+              aria-label="Previous Slide"
+            />
+            <div
+              className="absolute right-0 top-0 w-1/4 h-full cursor-e-resize pointer-events-auto"
+              onClick={() => sliderRef.current?.slickNext()}
+              aria-label="Next Slide"
+            />
+          </div>
         </div>
 
         <div className="relative z-10 container mx-auto px-6 h-full flex items-center pointer-events-none">
