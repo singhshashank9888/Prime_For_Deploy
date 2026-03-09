@@ -1,16 +1,16 @@
-export const API_BASE_URL = import.meta.env.API_BASE_URL || 'http://localhost:5001/api';
+// Hardcoded production URL
+export const API_BASE_URL = 'https://primefinal.onrender.com/api';
 
 export const apiCall = async (endpoint: string, options?: RequestInit) => {
   const token = localStorage.getItem('authToken');
 
-  // Explicitly use Record<string, string> to satisfy TypeScript
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
-    ...options?.headers as Record<string, string>,
+    ...(options?.headers as Record<string, string>),
   };
 
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`; // ✅ use bracket notation
+    headers['Authorization'] = `Bearer ${token}`;
   }
 
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
