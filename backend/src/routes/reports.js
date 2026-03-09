@@ -2,7 +2,7 @@ import express from 'express';
 import Report from '../models/Report.js';
 import Patient from '../models/Patient.js';
 import { authenticate, authorize } from '../middleware/auth.js';
-import { upload } from '../config/upload.js';
+import { cloudinaryUpload, cloudinary } from '../config/cloudinary.js';
 
 const router = express.Router();
 
@@ -85,7 +85,7 @@ router.get('/:id', authenticate, async (req, res) => {
 });
 
 // Upload report with MULTIPLE images (admin only)
-router.post('/upload', authenticate, authorize(['admin']), upload.array('reportImages', 10), async (req, res) => {
+router.post('/upload', authenticate, authorize(['admin']), cloudinaryUpload.array('reportImages', 10), async (req, res) => {
   let uploadedFiles = [];
 
   try {
@@ -192,7 +192,8 @@ router.post('/upload', authenticate, authorize(['admin']), upload.array('reportI
       const savedReports = [];
 
       for (const file of uploadedFiles) {
-        const reportImageUrl = `/uploads/reports/${file.filename}`;
+        // Cloudinary provides the secure_url in the file object
+        const reportImageUrl = file.path;
 
         const newReport = new Report({
           patientId: finalPatientId,
@@ -268,6 +269,13 @@ router.delete('/:id', authenticate, authorize(['admin']), async (req, res) => {
 
     if (!report) {
       return res.status(404).json({ success: false, message: 'Report not found' });
+    }
+
+    // Optional: Delete from Cloudinary if URL is a Cloudinary URL
+    if (report.reportImageUrl && report.reportImageUrl.includes('cloudinary')) {
+      const publicId = report.reportImageUrl.split('/').pop().split('.')[0];
+      const folder = 'prime-hospital/reports/';
+      await cloudinary.uploader.destroy(folder + publicId);
     }
 
     res.json({ success: true, message: 'Report deleted successfully' });

@@ -104,7 +104,7 @@ const Contact = () => {
                   style={{ border: 0 }}
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3575.8981893456015!2d87.2649!3d26.4037!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39ef608a000b8b6d%3A0x1234567890!2sPrime%20Hospital!5e0!3m2!1sen!2snp!4v1234567890"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3571.9159683127996!2d87.28438539999999!3d26.458437500000002!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39ef75003345daa1%3A0x8422f63b3b5f5a87!2sPrime%20hospital!5e0!3m2!1sne!2snp!4v1773027514614!5m2!1sne!2snp"
                 ></iframe>
               </div>
             </div>

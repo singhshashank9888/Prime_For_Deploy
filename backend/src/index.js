@@ -12,6 +12,9 @@ import patientRoutes from './routes/patients.js';
 import appointmentRoutes from './routes/appointments.js';
 import messageRoutes from './routes/messages.js';
 import reportRoutes from './routes/reports.js';
+import helmet from 'helmet';
+import mongoSanitize from 'express-mongo-sanitize';
+import { rateLimit } from 'express-rate-limit';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,8 +23,42 @@ dotenv.config();
 
 const app = express();
 
+// Security Middleware
+app.use(helmet()); // Set security HTTP headers
+app.use(mongoSanitize()); // Data sanitization against NoSQL query injection
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  message: 'Too many requests from this IP, please try again after 15 minutes',
+});
+
+// Apply the rate limiting middleware to all requests
+app.use('/api', limiter);
+
 // Middleware
-app.use(cors());
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:8080',
+  'https://prime-hospital-frontend.vercel.app', // Replace with your actual Vercel URL
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -62,11 +99,11 @@ app.use('/uploads', express.static(uploadsPath, {
 // Test endpoint to verify file serving
 app.get('/api/uploads-status', (req, res) => {
   const reportsPath = path.join(uploadsPath, 'reports');
-  
+
   try {
     const reportsExist = fs.existsSync(reportsPath);
     let files = [];
-    
+
     if (reportsExist) {
       files = fs.readdirSync(reportsPath).map(file => {
         const filePath = path.join(reportsPath, file);
@@ -78,7 +115,7 @@ app.get('/api/uploads-status', (req, res) => {
         };
       });
     }
-    
+
     return res.json({
       uploadsPath,
       uploadsExist: fs.existsSync(uploadsPath),
