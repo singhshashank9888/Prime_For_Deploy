@@ -145,13 +145,13 @@ const Index = () => {
         <div className="absolute inset-0 w-full h-full z-0">
           <Slider ref={sliderRef} {...sliderSettings} className="h-full w-full">
             {heroImages.map((img, idx) => (
-              <div key={idx} className="relative h-[95vh] min-h-[700px]">
+              <div key={idx} className="relative h-[95vh] min-h-[600px] md:min-h-[700px]">
                 <img
                   src={img}
                   alt={`Hero ${idx + 1}`}
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-[5000ms] scale-110"
                 />
-                <div className="absolute inset-0 bg-black/45 backdrop-brightness-95" />
+                <div className="absolute inset-0 bg-black/50 backdrop-brightness-90" />
               </div>
             ))}
           </Slider>
@@ -180,7 +180,7 @@ const Index = () => {
             </div>
 
             {/* Title: No Italics, Bold/Light Mix */}
-            <h1 className="hero-title text-6xl md:text-8xl font-serif text-white mb-8 tracking-tight drop-shadow-lg leading-[1.1]">
+            <h1 className="hero-title text-5xl sm:text-6xl md:text-8xl font-serif text-white mb-6 md:mb-8 tracking-tight drop-shadow-lg leading-[1.1]">
               <span className="font-light block sm:inline">In the</span> <span className="font-bold">Heart</span><br />
               <span className="font-light block sm:inline">of</span> <span className="font-bold">Biratnagar</span>
             </h1>
@@ -190,14 +190,14 @@ const Index = () => {
               state-of-the-art diagnostic technology for our community.
             </p>
 
-            <div className="hero-btns flex flex-wrap gap-5 justify-center md:justify-start">
+            <div className="hero-btns flex flex-col sm:flex-row gap-4 sm:gap-5 justify-center md:justify-start">
               <Link to="/appointments">
-                <Button size="lg" className="bg-white text-slate-900 hover:bg-slate-200 font-bold px-10 h-16 rounded-full shadow-2xl transition-all active:scale-95">
+                <Button size="lg" className="bg-white text-slate-900 hover:bg-slate-200 font-bold px-8 sm:px-10 h-14 sm:h-16 rounded-full shadow-2xl transition-all active:scale-95 text-sm sm:text-base w-full sm:w-auto">
                   Book Appointment
                 </Button>
               </Link>
               <Link to="/departments">
-                <Button size="lg" className="bg-white/10 text-white hover:bg-white/20 backdrop-blur-md border border-white/20 font-bold px-10 h-16 rounded-full transition-all">
+                <Button size="lg" className="bg-white/10 text-white hover:bg-white/20 backdrop-blur-md border border-white/20 font-bold px-8 sm:px-10 h-14 sm:h-16 rounded-full transition-all text-sm sm:text-base w-full sm:w-auto">
                   Our Departments
                 </Button>
               </Link>
@@ -206,17 +206,16 @@ const Index = () => {
         </div>
       </section>
 
-      {/* --- 2. STATS SECTION --- */}
-      <section className="stats-section relative -mt-16 z-20 container mx-auto px-6">
-        <div className="bg-slate-900 rounded-[3rem] p-12 text-white shadow-2xl border border-white/5">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
+      <section className="stats-section relative -mt-12 sm:-mt-16 z-20 container mx-auto px-4 md:px-6">
+        <div className="bg-slate-900 rounded-[2rem] sm:rounded-[3rem] p-8 sm:p-12 text-white shadow-2xl border border-white/5 mx-2 sm:mx-0">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 text-center">
             {stats.map((s) => (
-              <div key={s.label} className="stat-card group flex flex-col items-center gap-3">
-                <div className="h-12 w-12 rounded-2xl bg-white/10 flex items-center justify-center mb-2 group-hover:bg-white group-hover:text-slate-900 transition-all duration-500">
-                  <s.icon size={24} />
+              <div key={s.label} className="stat-card group flex flex-col items-center gap-2 sm:gap-3">
+                <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl sm:rounded-2xl bg-white/10 flex items-center justify-center mb-1 sm:mb-2 group-hover:bg-white group-hover:text-slate-900 transition-all duration-500">
+                  <s.icon size={20} className="sm:w-6 sm:h-6" />
                 </div>
-                <span className="text-4xl font-bold tracking-tighter">{s.value}</span>
-                <span className="text-[10px] uppercase tracking-[0.2em] font-bold opacity-50">{s.label}</span>
+                <span className="text-3xl sm:text-4xl font-bold tracking-tighter">{s.value}</span>
+                <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.2em] font-bold opacity-50 px-1">{s.label}</span>
               </div>
             ))}
           </div>
@@ -224,30 +223,30 @@ const Index = () => {
       </section>
 
       {/* --- 3. DEPARTMENTS PREVIEW --- */}
-      <section className="dept-section py-32 bg-white">
+      <section className="dept-section py-20 sm:py-32 bg-white">
         <div className="container mx-auto px-6">
-          <div className="text-center mb-20">
-            <h2 className="text-[10px] font-bold text-slate-400 tracking-[0.4em] uppercase mb-4">Specialties</h2>
-            <h3 className="text-4xl md:text-5xl font-serif text-slate-900 tracking-tight">
+          <div className="text-center mb-12 sm:mb-20">
+            <h2 className="text-[9px] sm:text-[10px] font-bold text-slate-400 tracking-[0.4em] uppercase mb-4">Specialties</h2>
+            <h3 className="text-3xl md:text-5xl font-serif text-slate-900 tracking-tight">
               <span className="font-bold text-slate-900">Our</span> <span className="font-light opacity-90">Departments</span>
             </h3>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
             {departments.map((d) => (
               <Link
                 key={d.name}
-                to={`/departments/${d.name.toLowerCase().replace(/\s+/g, "-")}`} // Converts name to slug
-                className="dept-card group p-10 rounded-[2.5rem] border border-slate-100 bg-white hover:bg-slate-50 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 block"
+                to={`/departments/${d.name.toLowerCase().replace(/\s+/g, "-")}`}
+                className="dept-card group p-8 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] border border-slate-100 bg-white hover:bg-slate-50 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 block"
               >
-                <div className="h-14 w-14 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 mb-8 group-hover:bg-slate-900 group-hover:text-white transition-all duration-500 shadow-inner">
-                  <d.icon size={26} strokeWidth={1.5} />
+                <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-xl sm:rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 mb-6 sm:mb-8 group-hover:bg-slate-900 group-hover:text-white transition-all duration-500 shadow-inner">
+                  <d.icon size={24} className="sm:w-[26px] sm:h-[26px]" strokeWidth={1.5} />
                 </div>
-                <h4 className="text-xl font-bold mb-3 text-slate-900 tracking-tight">
+                <h4 className="text-lg sm:text-xl font-bold mb-3 text-slate-900 tracking-tight">
                   {d.name}
                 </h4>
                 <p className="text-slate-500 text-sm leading-relaxed font-light">{d.desc}</p>
-                <div className="flex items-center text-xs font-bold text-slate-400 group-hover:text-slate-900 gap-2 uppercase tracking-widest mt-4">
+                <div className="flex items-center text-[10px] sm:text-xs font-bold text-slate-400 group-hover:text-slate-900 gap-2 uppercase tracking-widest mt-4">
                   View Department <ArrowRight size={14} className="group-hover:translate-x-2 transition-transform" />
                 </div>
               </Link>
@@ -256,14 +255,14 @@ const Index = () => {
             {/* View All Departments Card */}
             <Link
               to="/departments"
-              className="dept-card group p-10 rounded-[2.5rem] border border-slate-100 bg-white hover:bg-slate-50 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 flex flex-col items-center justify-center text-center"
+              className="dept-card group p-8 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] border border-slate-100 bg-white hover:bg-slate-50 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 flex flex-col items-center justify-center text-center"
             >
-              <div className="h-14 w-14 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 mb-8 group-hover:bg-slate-900 group-hover:text-white transition-all duration-500 shadow-inner">
-                <ArrowRight size={26} />
+              <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-xl sm:rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 mb-6 sm:mb-8 group-hover:bg-slate-900 group-hover:text-white transition-all duration-500 shadow-inner">
+                <ArrowRight size={24} className="sm:w-[26px] sm:h-[26px]" />
               </div>
-              <h4 className="text-xl font-bold mb-3 text-slate-900 tracking-tight">View All Departments</h4>
+              <h4 className="text-lg sm:text-xl font-bold mb-3 text-slate-900 tracking-tight">View All</h4>
               <p className="text-slate-500 text-sm leading-relaxed font-light">
-                Explore all our specialized medical services in detail
+                Explore all our specialized medical services
               </p>
             </Link>
           </div>
@@ -286,18 +285,18 @@ const Index = () => {
           />
           <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px] transition-all duration-700" />
 
-          <div className="relative z-10 w-full p-12 md:p-24 text-center md:text-left text-white">
+          <div className="relative z-10 w-full p-8 sm:p-12 md:p-24 text-center md:text-left text-white">
             <div className="max-w-2xl">
-              <h2 className="text-4xl md:text-6xl font-serif mb-6 leading-tight">
+              <h2 className="text-3xl sm:text-4xl md:text-6xl font-serif mb-6 leading-tight">
                 Meet <span className="font-light opacity-90">Our</span> <br />
                 <span className="font-bold">Medical Experts</span>
               </h2>
-              <p className="text-white/80 text-lg mb-10 font-light leading-relaxed">
+              <p className="text-white/80 text-base sm:text-lg mb-8 sm:mb-10 font-light leading-relaxed">
                 Experienced and compassionate professionals dedicated to
                 providing world-class clinical care to Biratnagar.
               </p>
               <Link to="/doctors">
-                <Button size="lg" className="bg-white text-slate-900 hover:bg-slate-200 rounded-full font-bold px-12 h-16 shadow-xl active:scale-95 transition-transform">
+                <Button size="lg" className="bg-white text-slate-900 hover:bg-slate-200 rounded-full font-bold px-10 sm:px-12 h-14 sm:h-16 shadow-xl active:scale-95 transition-transform text-sm sm:text-base">
                   View All Doctors
                 </Button>
               </Link>

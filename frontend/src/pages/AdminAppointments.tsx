@@ -140,8 +140,8 @@ const AdminAppointments = () => {
           <button
             onClick={() => setActiveTab("pending")}
             className={`flex items-center justify-center sm:justify-start gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold transition-all text-sm sm:text-base ${activeTab === "pending"
-                ? "bg-yellow-600 text-white"
-                : "bg-white text-slate-900 border border-slate-200 hover:border-slate-300"
+              ? "bg-yellow-600 text-white"
+              : "bg-white text-slate-900 border border-slate-200 hover:border-slate-300"
               }`}
           >
             <Clock size={20} />
@@ -150,8 +150,8 @@ const AdminAppointments = () => {
           <button
             onClick={() => setActiveTab("confirmed")}
             className={`flex items-center justify-center sm:justify-start gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold transition-all text-sm sm:text-base ${activeTab === "confirmed"
-                ? "bg-green-600 text-white"
-                : "bg-white text-slate-900 border border-slate-200 hover:border-slate-300"
+              ? "bg-green-600 text-white"
+              : "bg-white text-slate-900 border border-slate-200 hover:border-slate-300"
               }`}
           >
             <CheckCircle size={20} />
@@ -165,48 +165,44 @@ const AdminAppointments = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Appointments List */}
             <div className="lg:col-span-2">
-              <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-                {displayedAppointments.length === 0 ? (
-                  <p className="p-6 text-center text-slate-600">
-                    No {activeTab === "pending" ? "pending" : "confirmed"} appointments
-                  </p>
-                ) : (
+              <div className="md:bg-white md:rounded-xl md:shadow-lg md:overflow-hidden">
+                {/* Desktop View: Table */}
+                <div className="hidden md:block overflow-x-auto">
                   <table className="w-full">
-                    <thead className={`text-white text-xs sm:text-sm ${activeTab === "pending" ? "bg-yellow-600" : "bg-green-600"
-                      }`}>
+                    <thead className={`text-white text-sm ${activeTab === "pending" ? "bg-yellow-600" : "bg-green-600"}`}>
                       <tr>
-                        <th className="px-4 sm:px-6 py-3 text-left">Patient</th>
-                        <th className="px-4 sm:px-6 py-3 text-left">Department</th>
-                        <th className="px-4 sm:px-6 py-3 text-left">Date</th>
-                        <th className="px-4 sm:px-6 py-3 text-left">ID</th>
-                        <th className="px-4 sm:px-6 py-3 text-left">Action</th>
+                        <th className="px-6 py-4 text-left font-semibold">Patient</th>
+                        <th className="px-6 py-4 text-left font-semibold">Department</th>
+                        <th className="px-6 py-4 text-left font-semibold">Date</th>
+                        <th className="px-6 py-4 text-left font-semibold">ID</th>
+                        <th className="px-6 py-4 text-center font-semibold">Action</th>
                       </tr>
                     </thead>
-                    <tbody className="text-xs sm:text-sm">
+                    <tbody className="text-sm">
                       {displayedAppointments.map((apt: any) => (
                         <tr
                           key={apt._id}
-                          className="border-b border-slate-200 hover:bg-slate-50"
+                          className="border-b border-slate-100 hover:bg-slate-50 transition-colors"
                         >
-                          <td className="px-4 sm:px-6 py-3 whitespace-nowrap">{apt.patientName}</td>
-                          <td className="px-4 sm:px-6 py-3 whitespace-nowrap">{apt.department}</td>
-                          <td className="px-4 sm:px-6 py-3 whitespace-nowrap">
+                          <td className="px-6 py-4 font-medium">{apt.patientName}</td>
+                          <td className="px-6 py-4 text-slate-500">{apt.department}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-slate-500">
                             {new Date(apt.appointmentDate).toLocaleDateString()}
                           </td>
-                          <td className="px-4 sm:px-6 py-3">
+                          <td className="px-6 py-4">
                             {apt.patientId ? (
-                              <span className="font-mono text-blue-600 font-semibold">
+                              <span className="font-mono text-blue-600 font-bold bg-blue-50 px-2 py-1 rounded text-xs">
                                 {apt.patientId?.patientId || "-"}
                               </span>
                             ) : (
-                              <span className="text-slate-400">-</span>
+                              <span className="text-slate-300">-</span>
                             )}
                           </td>
-                          <td className="px-4 sm:px-6 py-3">
+                          <td className="px-6 py-4 text-center">
                             {apt.status === "pending" && (
                               <button
                                 onClick={() => setSelectedAppointment(apt)}
-                                className="text-blue-600 hover:text-blue-800 font-semibold"
+                                className="px-4 py-2 bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white rounded-lg font-bold transition-all text-xs uppercase tracking-wider"
                               >
                                 Confirm
                               </button>
@@ -216,7 +212,46 @@ const AdminAppointments = () => {
                       ))}
                     </tbody>
                   </table>
-                )}
+                </div>
+
+                {/* Mobile View: Cards */}
+                <div className="md:hidden space-y-4">
+                  {displayedAppointments.map((apt: any) => (
+                    <div key={apt._id} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden">
+                      <div className={`absolute top-0 left-0 w-1.5 h-full ${activeTab === "pending" ? "bg-yellow-600" : "bg-green-600"}`} />
+
+                      <div className="flex justify-between items-start mb-4">
+                        <div>
+                          <h4 className="text-lg font-bold text-slate-900 leading-tight">{apt.patientName}</h4>
+                          <p className="text-sm text-slate-500 mt-1">{apt.department}</p>
+                        </div>
+                        {apt.patientId && (
+                          <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded uppercase tracking-wider">{apt.patientId.patientId}</span>
+                        )}
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4 mb-6">
+                        <div className="bg-slate-50 p-3 rounded-xl text-center">
+                          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Date</p>
+                          <p className="text-xs font-bold text-slate-900">{new Date(apt.appointmentDate).toLocaleDateString()}</p>
+                        </div>
+                        <div className="bg-slate-50 p-3 rounded-xl text-center">
+                          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Time Slot</p>
+                          <p className="text-xs font-bold text-slate-900">{apt.timeSlot || "N/A"}</p>
+                        </div>
+                      </div>
+
+                      {apt.status === "pending" && (
+                        <button
+                          onClick={() => setSelectedAppointment(apt)}
+                          className="w-full py-3 bg-slate-950 text-white font-bold rounded-xl text-xs uppercase tracking-widest hover:bg-slate-800 transition-colors shadow-lg shadow-slate-200"
+                        >
+                          Review & Confirm
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 

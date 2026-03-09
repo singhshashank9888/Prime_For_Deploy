@@ -109,6 +109,21 @@
   .text-balance {
     text-wrap: balance;
   }
+
+  /* Responsive Table Utility */
+  .responsive-table-container {
+    @apply overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm;
+  }
+
+  /* Hide scrollbar but allow scroll */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
 
 /* --- Global Layout Enhancements --- */
@@ -143,6 +158,22 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--primary) / 0.6);
+}
+
+/* Fix for mobile horizontal overflow */
+body {
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+}
+
+/* Glassmorphism Utility */
+.glass-panel {
+  @apply bg-white/70 backdrop-blur-xl border border-white/20 shadow-xl;
+}
+
+.dark .glass-panel {
+  @apply bg-slate-900/70 backdrop-blur-xl border border-white/10 shadow-xl;
 }
 
 /* --- Slick Slider Premium Customization --- */

@@ -100,7 +100,6 @@ const AdminMessages = () => {
     }
   };
 
-  // FIXED: Filter messages into unread and replied
   const unreadMessages = messages.filter(
     (msg: any) => msg.status === "new" || msg.status === "read"
   );
@@ -129,8 +128,8 @@ const AdminMessages = () => {
           <button
             onClick={() => setActiveTab("unread")}
             className={`flex items-center justify-center sm:justify-start gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold transition-all text-sm sm:text-base ${activeTab === "unread"
-                ? "bg-blue-600 text-white"
-                : "bg-white text-slate-900 border border-slate-200 hover:border-slate-300"
+              ? "bg-blue-600 text-white"
+              : "bg-white text-slate-900 border border-slate-200 hover:border-slate-300"
               }`}
           >
             <Mail size={20} />
@@ -139,8 +138,8 @@ const AdminMessages = () => {
           <button
             onClick={() => setActiveTab("replied")}
             className={`flex items-center justify-center sm:justify-start gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold transition-all text-sm sm:text-base ${activeTab === "replied"
-                ? "bg-green-600 text-white"
-                : "bg-white text-slate-900 border border-slate-200 hover:border-slate-300"
+              ? "bg-green-600 text-white"
+              : "bg-white text-slate-900 border border-slate-200 hover:border-slate-300"
               }`}
           >
             <CheckCircle2 size={20} />
@@ -150,14 +149,14 @@ const AdminMessages = () => {
 
         {/* Messages Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Messages List */}
-          <div className="lg:col-span-1">
+          {/* Messages List - hidden on mobile when a message is selected */}
+          <div className={`lg:col-span-1 ${selectedMessage ? 'hidden lg:block' : 'block'}`}>
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
               <div className={`text-white px-6 py-3 font-semibold ${activeTab === "unread" ? "bg-blue-600" : "bg-green-600"
                 }`}>
                 {activeTab === "unread" ? "Unread" : "Replied"} Messages ({displayedMessages.length})
               </div>
-              <div className="max-h-96 overflow-y-auto">
+              <div className="max-h-[300px] lg:max-h-[calc(100vh-350px)] overflow-y-auto no-scrollbar">
                 {loading ? (
                   <p className="p-4 text-center text-slate-600">Loading...</p>
                 ) : displayedMessages.length === 0 ? (
@@ -168,10 +167,10 @@ const AdminMessages = () => {
                       key={msg._id}
                       onClick={() => handleSelectMessage(msg)}
                       className={`w-full text-left px-4 py-3 border-b border-slate-200 hover:bg-slate-50 transition-all ${selectedMessage?._id === msg._id
-                          ? activeTab === "unread"
-                            ? "bg-blue-50 border-l-4 border-l-blue-500"
-                            : "bg-green-50 border-l-4 border-l-green-500"
-                          : ""
+                        ? activeTab === "unread"
+                          ? "bg-blue-50 border-l-4 border-l-blue-500"
+                          : "bg-green-50 border-l-4 border-l-green-500"
+                        : ""
                         }`}
                     >
                       <p className="font-semibold text-sm text-slate-900">
@@ -195,8 +194,15 @@ const AdminMessages = () => {
           </div>
 
           {/* Message Details */}
-          {selectedMessage && (
+          {selectedMessage ? (
             <div className="lg:col-span-2">
+              {/* Back button for mobile when message is selected */}
+              <button
+                onClick={() => setSelectedMessage(null)}
+                className="lg:hidden flex items-center gap-2 text-slate-500 font-bold text-xs uppercase tracking-widest mb-4 bg-white px-4 py-2 rounded-lg border border-slate-100"
+              >
+                <ArrowLeft size={16} /> Back to List
+              </button>
               <div className="bg-white rounded-xl shadow-lg p-5 sm:p-8 border border-slate-100">
                 <h3 className="text-xl font-bold text-slate-900 mb-4">
                   {selectedMessage.subject}
@@ -258,6 +264,14 @@ const AdminMessages = () => {
                     </button>
                   </div>
                 )}
+              </div>
+            </div>
+          ) : (
+            <div className="hidden lg:flex lg:col-span-2 bg-white rounded-xl border border-dashed border-slate-200 items-center justify-center p-12 text-center text-slate-400">
+              <div className="max-w-xs mx-auto">
+                <Mail size={48} className="mx-auto mb-4 opacity-20" />
+                <p className="font-medium">Select a message to view details</p>
+                <p className="text-xs mt-1">Select from the list on the left to read and reply.</p>
               </div>
             </div>
           )}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Trash2, Edit, Plus, ArrowLeft, Search, X } from "lucide-react";
+import { Trash2, Edit, Plus, ArrowLeft, Search, X, Phone } from "lucide-react";
 import { toast } from "sonner";
 import { API_BASE_URL } from "@/api/config";
 
@@ -204,72 +204,100 @@ const AdminPatients = () => {
         {loading ? (
           <p className="text-center text-slate-600">Loading...</p>
         ) : (
-          <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-            {filteredPatients.length === 0 ? (
-              <div className="p-6 text-center">
-                <p className="text-slate-600 text-lg">
-                  {searchTerm ? "No patients found matching your search" : "No patients yet"}
-                </p>
-                {!searchTerm && (
-                  <button
-                    onClick={() => setShowAddPatientModal(true)}
-                    className="mt-4 inline-flex items-center gap-2 bg-slate-900 text-white px-4 py-2 rounded-lg hover:bg-slate-800 transition-all"
-                  >
-                    <Plus size={20} />
-                    Add First Patient
-                  </button>
-                )}
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-slate-900 text-white text-xs sm:text-sm">
-                    <tr>
-                      <th className="px-4 sm:px-6 py-3 text-left font-semibold">ID</th>
-                      <th className="px-4 sm:px-6 py-3 text-left font-semibold">Name</th>
-                      <th className="px-4 sm:px-6 py-3 text-left font-semibold">Email</th>
-                      <th className="px-4 sm:px-6 py-3 text-left font-semibold">Phone</th>
-                      <th className="px-4 sm:px-6 py-3 text-left font-semibold whitespace-nowrap">Blood Group</th>
-                      <th className="px-4 sm:px-6 py-3 text-left font-semibold">Actions</th>
+          <div className="md:bg-white md:rounded-xl md:shadow-lg md:overflow-hidden">
+            {/* Desktop View: Table */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-slate-900 text-white text-sm">
+                  <tr>
+                    <th className="px-6 py-4 text-left font-semibold">ID</th>
+                    <th className="px-6 py-4 text-left font-semibold">Name</th>
+                    <th className="px-6 py-4 text-left font-semibold">Email</th>
+                    <th className="px-6 py-4 text-left font-semibold">Phone</th>
+                    <th className="px-6 py-4 text-left font-semibold whitespace-nowrap">Blood Group</th>
+                    <th className="px-6 py-4 text-center font-semibold">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="text-sm">
+                  {filteredPatients.map((patient: any) => (
+                    <tr
+                      key={patient._id}
+                      className="border-b border-slate-100 hover:bg-slate-50 transition-colors"
+                    >
+                      <td className="px-6 py-4 font-bold text-blue-600">
+                        {patient.patientId}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap font-medium">{patient.fullName}</td>
+                      <td className="px-6 py-4 text-slate-500">{patient.email}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-slate-500">{patient.phone}</td>
+                      <td className="px-6 py-4 text-center">{patient.bloodGroup || "-"}</td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center justify-center gap-4">
+                          <button
+                            onClick={() => navigate(`/admin/patients/${patient._id}`)}
+                            className="p-2 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all"
+                            title="View/Edit"
+                          >
+                            <Edit size={18} />
+                          </button>
+                          <button
+                            onClick={() => deletePatient(patient._id)}
+                            className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                            title="Delete"
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        </div>
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody className="text-xs sm:text-sm">
-                    {filteredPatients.map((patient: any) => (
-                      <tr
-                        key={patient._id}
-                        className="border-b border-slate-200 hover:bg-slate-50 transition-colors"
-                      >
-                        <td className="px-4 sm:px-6 py-3 font-semibold text-blue-600">
-                          {patient.patientId}
-                        </td>
-                        <td className="px-4 sm:px-6 py-3 whitespace-nowrap">{patient.fullName}</td>
-                        <td className="px-4 sm:px-6 py-3 text-slate-600">{patient.email}</td>
-                        <td className="px-4 sm:px-6 py-3 whitespace-nowrap">{patient.phone}</td>
-                        <td className="px-4 sm:px-6 py-3">{patient.bloodGroup || "-"}</td>
-                        <td className="px-4 sm:px-6 py-3">
-                          <div className="flex items-center gap-3">
-                            <button
-                              onClick={() => navigate(`/admin/patients/${patient._id}`)}
-                              className="text-slate-600 hover:text-blue-600 transition-colors"
-                              title="View/Edit"
-                            >
-                              <Edit size={18} />
-                            </button>
-                            <button
-                              onClick={() => deletePatient(patient._id)}
-                              className="text-slate-600 hover:text-red-600 transition-colors"
-                              title="Delete"
-                            >
-                              <Trash2 size={18} />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile View: Cards */}
+            <div className="md:hidden space-y-4">
+              {filteredPatients.map((patient: any) => (
+                <div key={patient._id} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden group">
+                  <div className="absolute top-0 left-0 w-1 h-full bg-slate-900" />
+
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded uppercase tracking-wider mb-1 inline-block">{patient.patientId}</span>
+                      <h4 className="text-lg font-bold text-slate-900 leading-tight">{patient.fullName}</h4>
+                    </div>
+                    <div className="flex gap-2">
+                      <button onClick={() => navigate(`/admin/patients/${patient._id}`)} className="p-2 bg-slate-50 rounded-lg text-slate-600"><Edit size={16} /></button>
+                      <button onClick={() => deletePatient(patient._id)} className="p-2 bg-red-50 rounded-lg text-red-600"><Trash2 size={16} /></button>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-3 text-sm">
+                    <div className="flex items-center gap-3 text-slate-600">
+                      <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 shrink-0">@</div>
+                      <span className="truncate">{patient.email}</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-slate-600">
+                      <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 shrink-0">
+                        <Phone size={14} />
+                      </div>
+                      <span>{patient.phone}</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-slate-600">
+                      <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 shrink-0 font-bold text-[10px]">BG</div>
+                      <span>Blood Group: <span className="font-bold text-slate-900">{patient.bloodGroup || "Not Specified"}</span></span>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => navigate(`/admin/patients/${patient._id}`)}
+                    className="mt-6 w-full py-3 bg-slate-50 text-slate-900 font-bold rounded-xl text-xs uppercase tracking-widest hover:bg-slate-100 transition-colors"
+                  >
+                    View Full Profile
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>
